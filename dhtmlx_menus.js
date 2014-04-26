@@ -1,5 +1,5 @@
 // by Juan Orozco
-// on 12/16/2016
+// on 12/16/2014
 //
 // So, i'd prefer this be a js class or even a jQuery plugin but I ran out of time. It's almost there though!
 //
