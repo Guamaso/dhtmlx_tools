@@ -6,36 +6,37 @@
 //
 var DHTMLXMenus = function( opts )
 {
-  var go_debug, debug, options;
+  var go_debug, options, debug;
 
+  //constructor
   function menu_build(opts)
   {
-
+    //var debug;
     this.menus = [];
     options = opts;
     go_debug = true;
-  
-  }
 
-  menu_build.prototype.debug = function(m)
-  {
-    if (go_debug)
+    debug = function(m)
     {
-      console.log("");
-      console.log("--- DEBUG ---");
-      console.log("");
-      console.log(m);
-      console.log("");
-      console.log("--- /DEBUG ---");
-      console.log("");
+      if (go_debug)
+      {
+        console.log("");
+        console.log("--- DEBUG ---");
+        console.log("");
+        console.log(m);
+        console.log("");
+        console.log("--- /DEBUG ---");
+        console.log("");
+      }
     }
+  
   }
 
   //init menus
   menu_build.prototype.init = function()
   {
     var menu_obj, menu_list, item, result, opts;
-    this.debug("Initializing.");
+    debug("Initializing.");
 
     //set vars
     opts = options;
@@ -67,13 +68,11 @@ var DHTMLXMenus = function( opts )
 
       }
     }
-  /*
     menu_obj.attachEvent( "onClick", function( id )
     {
       //manages callbacks for all items
       customMenuEvents( opts.menu_name, id );
     });
-  */
   }
 
   menu_build.prototype.getDebugMode = function()
@@ -97,7 +96,7 @@ var DHTMLXMenus = function( opts )
     else
     {
       //fallback, won't show custom theme if selected...
-      menu = new dhtmlXMenuObject(menu_name);
+      menu = {};//new dhtmlXMenuObject(menu_name);
     }
     return menu;
   }
