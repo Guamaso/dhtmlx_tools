@@ -6,30 +6,64 @@
 //
 var DHTMLXMenus = function( opts )
 {
-  var go_debug, options, debug;
+  var go_debug, options, debug, params;
 
   //constructor
   function menu_build(opts)
   {
     //var debug;
-    this.menus = [];
+    params = {};
     options = opts;
     go_debug = true;
 
     debug = function(m)
     {
-      if (go_debug)
+      //checks if go_debug is true
+      if ( go_debug )
       {
-        console.log("");
-        console.log("--- DEBUG ---");
-        console.log("");
-        console.log(m);
-        console.log("");
-        console.log("--- /DEBUG ---");
-        console.log("");
+        //use passed in debug callback
+        if ( options.debug )
+        {
+          options.debug(m);
+        }
+        else
+        {
+          //checks if console exists
+          if ( window.console )
+          {
+            console.log("");
+            console.log("--- DEBUG ---");
+            console.log("");
+            console.log(m);
+            console.log("");
+            console.log("--- /DEBUG ---");
+            console.log("");
+
+          }
+        }
       }
     }
-  
+
+    // get/set parameters
+    param = function( param_name, param_value )
+    {
+      var resp = null;
+      if ( params.hasOwnProperty(param_name) )
+      {
+        if ( param_value || param_value == false )
+        {
+          params[param_name] = param_value;
+        }
+
+        resp = params[param_name];
+
+      }
+
+      return resp;
+    }  
+
+    //create empty menus object
+    param("menus", {});
   }
 
   //init menus
@@ -40,7 +74,7 @@ var DHTMLXMenus = function( opts )
 
     //set vars
     opts = options;
-    menu_obj = this.getMenuObjByName(opts.menu_name);
+    menu_obj = this.menuObj(opts.menu_name);
     if ( !opts )
     {
       //legacy
@@ -75,29 +109,29 @@ var DHTMLXMenus = function( opts )
     });
   }
 
-  menu_build.prototype.getDebugMode = function()
-  {
-    return go_debug;
-  }
-
   // returns a dhtmlx menu object from the global menu storage object
   // requires the name of the menu it was stored as
   //
-  menu_build.prototype.getMenuObjByName = function()
+  menu_build.prototype.menuObj = function( obj )
   {
-    var menu, opts;
+    var menus, menu, opts;
 
-    menu = false;
+    menu = null;
     opts = this.opts;
-    if ( window.genSearchMenus && window.genSearchMenus.hasOwnProperty(menu_name) )
+    menus = param("menus");
+    if ( menus.hasOwnProperty(opts.menu_name) )
     {
-      menu = genSearchMenus[menu_name];
+      //if object was passed, store it
+      if ( obj )
+      {
+        menus[opts.menu_name] = obj;
+        param("menus", menus);
+      }
+
+      //set object
+      menu = menus[opts.menu_name];
     }
-    else
-    {
-      //fallback, won't show custom theme if selected...
-      menu = {};//new dhtmlXMenuObject(menu_name);
-    }
+
     return menu;
   }
 
@@ -157,7 +191,7 @@ var DHTMLXMenus = function( opts )
     //set default
     resp = false;
     //get the appropraite menu object (this returns the dhtmlx object)
-    menu = getMenuObjByName( opts.menu_name );
+    menu = menuObj( opts.menu_name );
 
     //return false if one of the vars is null/undefined/false
     if ( item && opts.menu_name )
